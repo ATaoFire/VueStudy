@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模板语法</title>
+    <script src="vue.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <!-- 
+        Vue.js 使用了基于 HTML 的模板语法，允许开发者声明式地将 DOM 绑定至底层 Vue 实例的数据。
+        所有 Vue.js 的模板都是合法的 HTML，所以能被遵循规范的浏览器和 HTML 解析器解析。
+
+        在底层的实现上，Vue 将模板编译成虚拟 DOM 渲染函数。结合响应系统，
+        Vue 能够智能地计算出最少需要重新渲染多少组件，并把 DOM 操作次数减到最少。
+
+        如果你熟悉虚拟 DOM 并且偏爱 JavaScript 的原始力量，你也可以不用模板，
+        直接写渲染 (render) 函数，使用可选的 JSX 语法。
+     -->
+
+     <!-- 插值 -->
+     <div id="app">
+         <!-- 数据绑定最常见的形式就是使用“Mustache”语法 (双大括号) 的文本插值 -->
+         <!-- Mustache 标签将会被替代为对应数据对象上 msg property 的值。
+            无论何时，绑定的数据对象上 msg property 发生了改变，插值处的内容都会更新。 -->
+        <span>Message: {{ msg }}</span>
+        <!--  通过使用 v-once 指令，你也能执行一次性地插值，当数据改变时，插值处的内容不会更新。
+            但请留心这会影响到该节点上的其它数据绑定：-->
+        <br>
+        <span v-once>这个将不会改变: {{ msg }}</span>
+        <!-- 原始HTML双大括号会将数据解释为普通文本，而非 HTML 代码。
+            为了输出真正的 HTML，你需要使用 v-html 指令： -->
+        <p>Using mustaches: {{ rawHtml }}</p>
+        <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+        <!-- Mustache 语法不能作用在 HTML attribute 上，遇到这种情况应该使用 v-bind 指令： -->
+        <div v-bind:class="color">test、、、、</div>
+        <div v-bind:id="color1">test、、、、</div>
+        <!-- 对于布尔 attribute (它们只要存在就意味着值为 true)，v-bind 工作起来略有不同 -->
+        <!-- 如果 isButtonDisabled 的值是 null、undefined 或 false，则 disabled attribute 甚至不会被包含在渲染出来的 <button> 元素中 -->
+        <button v-bind:disabled="isButtonDisabled">Button</button>
+        <br>
+        {{ number + 1 }}
+        <br>
+        {{ isOK ? 'YES' : 'NO' }}
+        <br>
+        {{ message.split('').reverse().join('') }}
+
+<div v-bind:id="'list-' + id"></div>
+
+     </div>
+     <script type="text/javascript">
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                msg: "Hi Vue",
+                rawHtml: '<span style="color:red">这是绑定文本</span>',
+                color: 'blue',
+                color1: 'red',
+                isButtonDisabled: true,//true是禁用，false是启用
+                number: 10,
+                isOK: true,
+                message: "Vue",
+
+            }
+        });
+        vm.msg = 'ss'
+    </script>
+    <style type="text/css">
+        /* .是class选择器， #是id */
+        .blue{color: blue; font-size: 20px;}
+        #red{color: red; font-size:larger;}
+    </style>
+
+    <!-- 指令 -->
+    <!-- 指令 (Directives) 是带有 v- 前缀的特殊 attribute。
+        指令 attribute 的值预期是单个 JavaScript 表达式 (v-for 是例外情况，稍后我们再讨论)。
+        指令的职责是，当表达式的值改变时，将其产生的连带影响，响应式地作用于 DOM -->
+    <div id="app-2">
+        <p v-if="seen">现在你看到我了</p>
+        <!-- 一些指令能够接收一个“参数”，在指令名称之后以冒号表示。
+            例如，v-bind 指令可以用于响应式地更新 HTML attribute -->
+        <!-- 在这里 href 是参数，告知 v-bind 指令将该元素的 href attribute 与表达式 url 的值绑定 -->
+        <a v-bind:href="url">Vue教程</a>
+
+        <a v-on:click="doSomething"></a>
+        <div @click="click1">
+            <!-- stop就是修饰符 -->
+            <div @click.stop="click2">
+                点击我
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    var vm1 = new Vue({
+        el: "#app-2",
+        data:{
+            seen: false,
+            url: 'https://cn.vuejs.org/v2/guide/syntax.html',
+        },
+        methods: {
+            click1:function(){
+                console.log("点击一下");
+            },
+            click2:function(){
+                console.log("再次点击");
+            },
+        },
+    });
+    </script>
+</body>
+</html>

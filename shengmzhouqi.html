@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生命周期</title>
+    <script src="vue.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <div id="app">
+        {{msg}}
+    </div>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                msg : 'Hi Vue',
+            },
+            //在数据进行初始化只有，数据观测（data observer）和event/watcher事件配置之前被调用
+            beforeCreate: function () {
+                console.group('beforeCreate 创建前状态===============》');
+                console.log("%c%s", "color:red" , "el     : " + this.$el); //undefined
+                console.log("%c%s", "color:red","data   : " + this.$data); //undefined 
+                console.log("%c%s", "color:red","message: " + this.message)  
+            },
+            // 实例创建完成之后立即被调用
+            // 这一步已经完成下面的步骤：数据观测（data observer）和event/watcher事件回调
+            // 挂载阶段还未开始，$el属性目前不可见
+            created: function () {
+                console.group('created 创建完毕状态===============》');
+                console.log("%c%s", "color:red","el     : " + this.$el); //undefined
+                console.log("%c%s", "color:red","data   : " + this.$data); //已被初始化 
+                console.log("%c%s", "color:red","message: " + this.message); //已被初始化
+            },
+            // 在挂载开始之前被调用：相关的渲染函数首次被调用
+            beforeMount: function () {
+                console.group('beforeMount 挂载前状态===============》');
+                console.log("%c%s", "color:red","el     : " + (this.$el)); //已被初始化
+                console.log(this.$el);
+                console.log("%c%s", "color:red","data   : " + this.$data); //已被初始化  
+                console.log("%c%s", "color:red","message: " + this.message); //已被初始化  
+            },
+            // el 被创建的vm.$el替换，挂载成功
+            mounted: function () {
+                console.group('mounted 挂载结束状态===============》');
+                console.log("%c%s", "color:red","el     : " + this.$el); //已被初始化
+                console.log(this.$el);    
+                console.log("%c%s", "color:red","data   : " + this.$data); //已被初始化
+                console.log("%c%s", "color:red","message: " + this.message); //已被初始化 
+            },
+            // 数据更新时调用
+            beforeUpdate: function () {
+                console.group('beforeUpdate 更新前状态===============》');
+                console.log("%c%s", "color:red","el     : " + this.$el);
+                console.log(this.$el);   
+                console.log("%c%s", "color:red","data   : " + this.$data); 
+                console.log("%c%s", "color:red","message: " + this.message); 
+            },
+            // 组件DOM已经更新，组件更新完毕
+            updated: function () {
+                console.group('updated 更新完成状态===============》');
+                console.log("%c%s", "color:red","el     : " + this.$el);
+                console.log(this.$el); 
+                console.log("%c%s", "color:red","data   : " + this.$data); 
+                console.log("%c%s", "color:red","message: " + this.message); 
+            },
+            // 实例被销毁之前调用。
+            beforeDestroy: function () {
+                console.group('beforeDestroy 销毁前状态===============》');
+                console.log("%c%s", "color:red","el     : " + this.$el);
+                console.log(this.$el);    
+                console.log("%c%s", "color:red","data   : " + this.$data); 
+                console.log("%c%s", "color:red","message: " + this.message); 
+            },
+            // Vue实例销毁后调用。
+            destroyed: function () {
+                console.group('destroyed 销毁完成状态===============》');
+                console.log("%c%s", "color:red","el     : " + this.$el);
+                console.log(this.$el);  
+                console.log("%c%s", "color:red","data   : " + this.$data); 
+                console.log("%c%s", "color:red","message: " + this.message)
+            }
+        });
+        
+    setTimeout(function(){
+        vm.msg = 'change 、、、'
+    }, 3000)
+    </script>
+</body>
+</html>

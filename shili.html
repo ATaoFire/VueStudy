@@ -1,0 +1,29 @@
+<!-- 实例 -->
+<!-- 每个Vue 都是通过Vue函数进行创建的 遵循MVVM模式  （Model View  ViewModel） -->
+<!-- Vue 创建时创建一个选项对象 下面示例中data 是选项对象 还有：data、props、propsData、computed、methods
+watch-->
+<!-- API文档 https://cn.vuejs.org/v2/api/ -->
+
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>安装Vue</title>
+        <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    <!-- 只有当实例被创建时就已经存在于 data 中的 property 才是响应式的 -->
+    <!-- 一般情况都是使用Vue的响应式，也有例外Object.freeze() 阻止响应式 -->
+    <!-- Vue 实例还暴露了一些有用的实例 property 与方法。它们都有前缀 $，以便与用户定义的 property 区分开来 -->
+    <body>
+        <div id="app">
+            {{a}}
+        </div>
+        <script>
+            var data = {a : 1};
+            var vm = new Vue({
+                el:"#app",
+                data:data
+            })
+        </script>
+    </body>
+</html>
