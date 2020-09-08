@@ -148,7 +148,7 @@
             },
             methods: {
                 getAnswer: function () {
-                    if (this.question.indexOf('?') === 1) {
+                    if (this.question.indexOf('?') === -1) {
                         this.answer = 'Questions usually contain a question mark. ;-)'
                         return
                     }
