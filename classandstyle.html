@@ -3,9 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Class 与 Style 绑定</title>
+    <script src="vue.js" type="text/javascript" charset="utf-8"></script> 
 </head>
 <body>
+    <div id="app">
+        <!-- v-bind:class 一个对象，以动态地切换 class -->
+        <div class = "test"
+        
+        v-bind:class="{active : isActive}"  
+        style="width: 200px; height: 200px; text-align: center; line-height: 200px;">
+            {{message}}
+        </div>
+
+        <div
+            class="static"
+            v-bind:class="{ active: isActive, 'text-danger': hasError }">
+            你好啊
+
+        </div>
+        <!-- 也可以不用再内联样式 -->
+        <div v-bind:class="classObject">nis </div>
+        <!-- 也可以是计算属性 -->
+        <div v-bind:class="classObject1">计算属性 </div>
+
+        <!-- 数组语法 -->
+        <div v-bind:class="[activeClass, errorClass]">数组语法</div>
+
+        <div v-bind:class="[isActive ? activeClass : '', errorClass]">三元计算</div>
+
+        <div v-bind:class="[{ active: isActive }, errorClass]">对象语法</div>
+
+        <!-- 用在组件上 -->
+        <my-component class="baz boo">nihao</my-component>
+        <my-component v-bind:class="{ active: isActive }">你好</my-component>
+        <!-- 绑定内联样式 -->
+        <!-- v-bind:style 的对象语法十分直观——看着非常像 CSS，但其实是一个 JavaScript 对象。
+            CSS property 名可以用驼峰式 (camelCase) 或短横线分隔 (kebab-case，记得用引号括起来) 来命名 -->
+        <div v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>
+
+        <!-- 内联 -->
+        <div v-bind:style="styleObject"></div>
+        <!-- 数组语法 -->
+        <div v-bind:style="[baseStyles, overridingStyles]"></div>
+        <!-- 动添加前缀 -->
+        <!-- 当 v-bind:style 使用需要添加浏览器引擎前缀的 CSS property 时，如 transform，Vue.js 会自动侦测并添加相应的前缀。 -->
+        <!-- 多重值 -->
+        <!-- 从 2.3.0 起你可以为 style 绑定中的 property 提供一个包含多个值的数组，常用于提供多个带前缀的值，例如：
+
+<div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }"></div>
+这样写只会渲染数组中最后一个被浏览器支持的值。在本例中，如果浏览器支持不带浏览器前缀的 flexbox，那么就只会渲染 display: flex。 -->
+    </div>
     
+    <script type="text/javascript">
+    // 组件
+        Vue.component('my-component', {
+            template: '<p class="foo bar">Hi</p>'
+        })
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                // isActive : true,
+
+                // isActive : true,
+                // hasError :true,
+
+                message:"Hi Vue",
+                // classObject: {
+                //     active: true,
+                //     'text-danger': false
+                // },
+                isActive : true,
+                error: null,
+
+                activeClass: 'active',
+                errorClass: 'text-danger',
+
+                activeColor: 'red',
+                fontSize: 30,
+                styleObject: {
+                    color: 'red',
+                    fontSize: '13px'
+                }
+
+            },
+            computed: {
+                classObject1: function () {
+                    return {
+                        active: this.isActive && !this.error,
+                        'text-danger': this.error && this.error.type === 'fatal'
+                    }
+                }
+            },
+        })
+    </script>
+    <style>
+        .test{font-size: 40px;}
+        .active{background: #FF0000;}
+        .text-danger{color: royalblue;}
+    </style>
 </body>
 </html>
