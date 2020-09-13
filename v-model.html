@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表单输入绑定V-model</title>
+    <script src="vue.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <!-- https://cn.vuejs.org/v2/guide/forms.html -->
+    <!-- 
+        v-model 指令在表单 <input>、<textarea> 及 <select> 元素上创建双向数据绑定。
+            它会根据控件类型自动选取正确的方法来更新元素。
+            尽管有些神奇，但 v-model 本质上不过是语法糖。
+            它负责监听用户的输入事件以更新数据，并对一些极端场景进行一些特殊处理
+     -->
+     <!-- 
+         v-model 会忽略所有表单元素的 value、checked、selected attribute 的初始值而总是将 Vue 实例的数据作为数据来源。
+         你应该通过 JavaScript 在组件的 data 选项中声明初始值
+      -->
+    <div id="example-1">
+        <!-- 文本 -->
+        <input v-model="message" placeholder="edit me">
+        <p>Message is: {{ message }}</p>
+        <!-- 多行文本 -->
+        <span>Multiline message is:</span>
+        <p style="white-space: pre-line;">{{ message1 }}</p>
+        <br>
+        <textarea v-model="message1" placeholder="add multiple lines"></textarea>
+        <br>
+        <!-- 复选框 -->
+        <!-- 单选 -->
+        <input type="checkbox" id="checkbox" v-model="checked">
+        <label for="checkbox">{{ checked }}</label>
+        <br>
+
+        <!-- 多选 -->
+        <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+        <label for="jack">Jack</label>
+        <input type="checkbox" id="john" value="John" v-model="checkedNames">
+        <label for="john">John</label>
+        <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+        <label for="mike">Mike</label>
+        <br>
+        <span>Checked names: {{ checkedNames }}</span>
+        <br>
+
+        <!-- 单选按钮 -->
+        <!--  -->
+        <input type="radio" id="one" value="One" v-model="picked">
+        <label for="one">One</label>
+        <br>
+        <input type="radio" id="two" value="Two" v-model="picked">
+        <label for="two">Two</label>
+        <br>
+         <span>Picked: {{ picked }}</span>
+         <br>
+         <!-- 选择框 -->
+         <select v-model="selected">
+            <option disabled value="">请选择</option>
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+          </select>
+          <span>Selected: {{ selected }}</span>
+    </div>
+    <!-- 多选 -->
+    <div id="example-2">
+        <select v-model="selected" multiple style="width: 50px;">
+          <option>A</option>
+          <option>B</option>
+          <option>C</option>
+        </select>
+        <br>
+        <span>Selected: {{ selected }}</span>
+      </div>
+      <!-- v-for动态渲染 -->
+      <div id="example-3">
+        <select v-model="selected">
+            <option v-for="option in options" v-bind:value="option.value">
+              {{ option.text }}
+            </option>
+          </select>
+          <span>Selected: {{ selected }}</span>
+      </div>
+      <!-- 值绑定 在data里赋值-->
+      <!-- 修饰符 -->
+      <!-- 在“change”时而非“input”时更新 -->
+        <input v-model.lazy="msg">
+        <!-- 自动将用户的输入值转为数值类型，可以给 v-model 添加 number 修饰符 -->
+        <input v-model.number="age" type="number">
+        <!-- 自动过滤用户输入的首尾空白字符，可以给 v-model 添加 trim 修饰符 -->
+        <input v-model.trim="msg">
+
+    <script type="text/javascript">
+        var vm = new Vue({
+            el : "#example-1",
+            data : {
+                message : "你好",
+                message1 : "",
+                checked : false,
+                checkedNames : [],
+                picked : "",
+                selected : "",
+            }
+        })
+        new Vue({
+            el : "#example-2",
+            data : {
+                selected : [],
+            }
+        })
+        new Vue({
+            el : "#example-3",
+            data : {
+                selected: 'A',
+                options: [
+                    { text: 'One', value: 'A' },
+                    { text: 'Two', value: 'B' },
+                    { text: 'Three', value: 'C' }
+                ]
+            }
+        })
+    </script>
+    <style type="text/css">
+    </style>
+</body>
+</html>

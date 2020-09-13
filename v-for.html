@@ -46,13 +46,21 @@
 因为它是 Vue 识别节点的一个通用机制，key 并不仅与 v-for 特别关联。后面我们将在指南中看到，它还具有其它用途。
 不要使用对象或数组之类的非基本类型值作为 v-for 的 key。请用字符串或数值类型的值 -->
 
-<!-- push() 添加
-pop() 删除
-shift()
-unshift()
-splice()
-sort()
-reverse() -->
+<!-- push() 添加 pop() 删除 shift() unshift() splice() sort() reverse() -->
+<!-- push() 方法可向数组的末尾添加一个或多个元素，并返回新的长度。
+pop() 方法用于删除并返回数组的最后一个元素。
+shift() 方法用于把数组的第一个元素从其中删除，并返回第一个元素的值。
+unshift() 方法可向数组的开头添加一个或更多元素，并返回新的长度。
+splice() 方法向/从数组中添加/删除项目，然后返回被删除的项目。
+sort() 方法用于对数组的元素进行排序。
+reverse() 方法用于颠倒数组中元素的顺序。 -->
+<!-- 替换数组
+filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
+concat() 方法用于连接两个或多个数组。
+slice() 方法可从已有的数组中返回选定的元素。
+其他
+split() 方法用于把一个字符串分割成字符串数组 -->
+<!-- Vue 为了使得 DOM 元素得到最大范围的重用而实现了一些智能的启发式方法，所以用一个含有相同元素的数组去替换原来的数组是非常高效的操作。 -->
             <div v-for="item in items" v-bind:key="item.id">
                 <!-- 内容 -->
                 {{ item.message }}
@@ -61,6 +69,70 @@ reverse() -->
             
         </ul>
         
+        <!-- 显示过滤/排序后的结果 -->
+        <div id = "evenNumbers">
+            <li v-for="n in evenNumbers">{{ n }}</li>
+            <div>
+                <span v-for="n in 10">{{ n }} </span>
+            </div>
+            
+        </div>
+
+        <div id = "sets">
+            <ul v-for="set in sets">
+                <li v-for="n in even(set)">{{ n }}</li>
+            </ul>
+            
+        </div>
+
+        <!-- <div id = "templatea">
+            <!-- 类似于 v-if，你也可以利用带有 v-for 的 <template> 来循环渲染一段包含多个元素的内容。比如： -->
+                <ul>
+                  <template v-for="item in items">
+                    <li>{{ item.msg }}</li>
+                    <li class="divider" role="presentation"></li>
+                  </template>
+                </ul>
+        </div> -->
+        
+        <!-- v-for 与 v-if 一同使用 -->
+        <!-- 当它们处于同一节点，v-for 的优先级比 v-if 更高，这意味着 v-if 将分别重复运行于每个 v-for 循环中。当你只想为部分项渲染节点时，这种优先级的机制会十分有用 -->
+        <!-- <li v-for="todo in todos" v-if="!todo.isComplete">
+                {{ todo }}
+            </li>
+            上面的代码将只渲染未完成的 todo。
+
+            而如果你的目的是有条件地跳过循环的执行，那么可以将 v-if 置于外层元素 (或 <template>) 上。如：
+
+            <ul v-if="todos.length">
+                <li v-for="todo in todos">
+                    {{ todo }}
+                </li>
+            </ul>
+            <p   p v-else>No todos left!</p> 
+        -->
+        <!-- 在组件上使用 v-for -->
+        <div id="todo-list-example">
+            <form v-on:submit.prevent="addNewTodo">
+              <label for="new-todo">Add a todo</label>
+              <input
+                v-model="newTodoText"
+                id="new-todo"
+                placeholder="E.g. Feed the cat"
+              >
+              <button>Add</button>
+            </form>
+            <ul>
+              <li
+                is="todo-item"
+                v-for="(todo, index) in todos"
+                v-bind:key="todo.id"
+                v-bind:title="todo.title"
+                v-on:remove="todos.splice(index, 1)"
+              ></li>
+            </ul>
+          </div>
+
     </div>
     <script type="text/javascript">
         var vm = new Vue({
@@ -105,6 +177,77 @@ reverse() -->
                 ]
             }
             
+        })
+
+        var vm33 = new Vue({
+            el : "#evenNumbers",
+            data: {
+                numbers: [ 1, 2, 3, 4, 5 ],
+                
+            },
+            computed: {
+                evenNumbers: function () {
+                    return this.numbers.filter(function (number) {
+                        return number % 2 === 0
+                    })
+                },
+        
+            }
+        })  
+
+        var vm331 = new Vue({
+            el : "#sets",
+            data: {
+                sets: [[ 1, 2, 3, 4, 5 ], [6, 7, 8, 9, 10]]
+                
+            },
+            computed: {
+                even: function (numbers) {
+                    return numbers.filter(function(number){
+                        return number %2 === 0
+                    })
+                },
+            }
+        })  
+        Vue.component('todo-item', {
+            template: '\
+                <li>\
+                {{ title }}\
+                    <button v-on:click="$emit(\'remove\')">Remove</button>\
+                </li>\
+            ',
+            props: ['title']
+        })
+
+        new Vue({
+            el: '#todo-list-example',
+            data: {
+                newTodoText: '',
+                todos: [
+                    {
+                        id: 1,
+                         title: 'Do the dishes',
+                    },
+                    {
+                        id: 2,
+                        title: 'Take out the trash',
+                    },
+                    {
+                        id: 3,
+                        title: 'Mow the lawn'
+                    }
+                ],
+                nextTodoId: 4
+            },
+             methods: {
+                addNewTodo: function () {
+                     this.todos.push({
+                        id: this.nextTodoId++,
+                         title: this.newTodoText
+                    })
+                     this.newTodoText = ''
+                }
+            }
         })
     </script>
     <style type="text/css">

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件基础</title>
+    <script src="vue.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body>
+    <div>
+        <div id="components-demo">
+            <button-counter></button-counter>
+            <button-counter></button-counter>
+            <button-counter></button-counter>
+            
+        </div>
+        <div id="components-demo1">
+            <blog-post title="My journey with Vue"></blog-post>
+            <blog-post title="Blogging with Vue"></blog-post>
+            <blog-post title="Why Vue is so fun"></blog-post>
+        </div>
+        
+          
+        <div id="blog-post-demo">
+            <blog-post
+            v-for="post in posts"
+            v-bind:key="post.id"
+            v-bind:title="post.title"
+          ></blog-post>
+        </div> 
+
+        <div id="blog-post-demo-1">
+           <blog-post-1
+            v-for="post in posts"
+            v-bind:key="post.id"
+            v-bind:title="post.title"
+            v-bind:content="post.content"
+            v-bind:publishedAt="post.publishedAt"
+            v-bind:comments="post.comments"
+            ></blog-post-1>
+            
+        </div>
+        <div id="blog-post-demo-2">
+            <blog-post-2 
+            v-for="post in posts"
+            v-bind:key="post.id"
+            v-bind:post="post"
+            ></blog-post-2>
+        </div>
+        <!-- https://cn.vuejs.org/v2/guide/components.html#data-%E5%BF%85%E9%A1%BB%E6%98%AF%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0 -->
+        <!-- 监听子组件事件 -->
+        <div id="blog-posts-events-demo">
+            <div :style="{ fontSize: postFontSize + 'em' }">
+              <blog-post-3
+                v-for="post in posts"
+                v-bind:key="post.id"
+                v-bind:post="post"
+                v-on:enlarge-text="postFontSize += 0.1"
+              ></blog-post-3>
+            </div>
+        </div>
+        <div id="events-demo">
+            <div :style="{ fontSize: postFontSize1 + 'em' }">
+                <blog-post-4
+                v-for="post in posts"
+                v-bind:key="post.id"
+                v-bind:post="post"
+                v-on:enlarge-text="postFontSize1 += $event"
+                ></blog-post-4>
+              </div>
+        </div>
+        
+    </div>
+    <script type="text/javascript">
+    // 因为组件是可复用的 Vue 实例，所以它们与 new Vue 接收相同的选项，
+    // 例如 data、computed、watch、methods 以及生命周期钩子等。
+    // 仅有的例外是像 el 这样根实例特有的选项。
+        // 定义一个名为 button-counter 的新组件
+        Vue.component('button-counter', { //全局注册和局部注册。至此，我们的组件都只是通过 Vue.component 全局注册
+            data: function () { //一个组件的 data 选项必须是一个函数
+                return {
+                     count: 0
+                }
+            },
+            template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'  //单个根元素,组件有且只能有一个根元素
+        }),
+        Vue.component('blog-post', {
+            props: ['title'],
+            // template: '<h3>{{ title }}</h3>'
+            template: '<div class="blog-post"><h1>{{ title }}</h1><div v-html="content"></div></div>'
+        }),
+
+        Vue.component('blog-post-1', {
+            props: ['title','content'],
+            template: `
+                <div class="blog-post1">
+                <h3>{{ title }}</h3>
+                <div v-html="content"></div>
+                </div>
+                `
+        }),
+
+        Vue.component('blog-post-2', {
+            props: ['post'],
+            template: `
+                <div class="blog-post1">
+                <h3>{{ post.title }}</h3>
+                <div v-html="post.content"></div>
+                </div>
+                `
+        }),
+        // 监听子事件
+        Vue.component('blog-post-3', {
+            props: ['post'],
+            template: `
+                <div class="blog-post-3">
+                    <h3>{{ post.title }}</h3>
+                    <button v-on:click="$emit('enlarge-text')">
+                        Enlarge text
+                    </button>
+                </div>
+            `,
+           
+        })
+
+        Vue.component('blog-post-4', {
+            props: ['post'],
+            template: `
+                <div class="blog-post4">
+                    <h3>{{ post.title }}</h3>
+                    <button  v-on:click="$emit('enlarge-text', 0.1)">
+                        点击事件
+                    </button>
+                    <div v-html="post.content"></div>
+                </div>
+            `,
+            methods: {
+                onEnlargeText: function (enlargeAmount) {
+                    this.postFontSize1 += enlargeAmount
+                }
+            },
+           
+        })
+
+        new Vue({
+            el : '#components-demo',
+            data : {
+
+            }
+            
+        }),
+        new Vue({
+            el : '#components-demo1',
+            data : {
+
+            }
+            
+        }),
+        new Vue({
+            el: '#blog-post-demo',
+            data: {
+                posts: [
+                    { id: 1, title: 'My journey with Vue' },
+                    { id: 2, title: 'Blogging with Vue' },
+                    { id: 3, title: 'Why Vue is so fun' }
+                ]
+            }
+        })
+        new Vue({
+            el: '#blog-post-demo-1',
+            data: {
+                posts: [
+                    { id: 1, title: 'My journey with Vue', content: "内容", publishedAt:"ss", comments:"bbb"},
+                    { id: 2, title: 'Blogging with Vue' , content: "内容", publishedAt:"ss", comments:"bbb"},
+                    { id: 3, title: 'Why Vue is so fun', content: "内容", publishedAt:"ss", comments:"bbb"}
+                ]
+            }
+        })
+        new Vue({
+            el: '#blog-post-demo-2',
+            data: {
+                posts: [
+                    { id: 1, title: 'My journey with Vue', content: "内容", publishedAt:"ss", comments:"bbb"},
+                    { id: 2, title: 'Blogging with Vue' , content: "内容", publishedAt:"ss", comments:"bbb"},
+                    { id: 3, title: 'Why Vue is so fun', content: "内容", publishedAt:"ss", comments:"bbb"}
+                ]
+            }
+        })
+
+        //   监听子组件事件 
+        new Vue({
+            el: '#blog-posts-events-demo',
+            data: {
+                posts: [
+                    { id: 1, title: 'My journey with Vue', content: "内容", publishedAt:"ss", comments:"bbb"},
+                    { id: 2, title: 'Blogging with Vue' , content: "内容", publishedAt:"ss", comments:"bbb"},
+                    { id: 3, title: 'Why Vue is so fun', content: "内容", publishedAt:"ss", comments:"bbb"}
+                ],
+                postFontSize: 0.5
+            }
+        })
+
+        new Vue({
+            el: '#events-demo',
+            data: {
+                posts: [
+                    { id: 1, title: 'My journey with Vue'},
+                    { id: 2, title: 'Blogging with Vue' },
+                    { id: 3, title: 'Why Vue is so fun'}
+                ],
+                postFontSize1: 1
+            }
+        })
+    </script>
+    <style type="text/css">
+    </style>
+</body>
+</html>
