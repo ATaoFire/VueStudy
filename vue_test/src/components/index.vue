@@ -57,7 +57,6 @@ export default {
     this.getData()
   },
   methods: {
-
     getData() {
       var that = this
       axios.get('https://easy-mock.com/mock/5f79df0cafffa44aa69d0198/restApi/list')
